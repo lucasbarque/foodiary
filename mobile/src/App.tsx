@@ -14,6 +14,9 @@ import { useEffect } from "react";
 import { HomeHeader } from "./components/HomeHeader";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { DateSwitcher } from "./components/DateSwitcher";
+import { DailyStats } from "./components/DailyStats";
+import { MealsList } from "./components/MealsList";
+
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -39,6 +42,28 @@ export default function App() {
       <SafeAreaProvider>
         <HomeHeader />
         <DateSwitcher />
+        <View className="mt-2">
+          <DailyStats
+            calories={{
+              current: 500,
+              goal: 2500,
+            }}
+            proteins={{
+              current: 500,
+              goal: 2500,
+            }}
+            carbohydrates={{
+              current: 1200,
+              goal: 2500,
+            }}
+            fats={{
+              current: 500,
+              goal: 2500,
+            }}
+          />
+        </View>
+        <View className="h-px bg-gray-200 mt-7" />
+        <MealsList />
       </SafeAreaProvider>
     </View>
   );
