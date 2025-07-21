@@ -33,7 +33,7 @@ const meals = [
 
 function MealsListHeader() {
   return (
-    <>
+    <View>
       <DateSwitcher />
       <View className="mt-2">
         <DailyStats
@@ -60,7 +60,7 @@ function MealsListHeader() {
       <Text className="text-black-700 text-base m-5 font-sans-medium tracking-[1.28px]">
         REFEIÇÕES
       </Text>
-    </>
+    </View>
   );
 }
 
@@ -72,7 +72,7 @@ export function MealsList() {
   const { bottom } = useSafeAreaInsets();
 
   return (
-    <View className="mt-4">
+    <View>
       <FlatList
         data={meals}
         contentContainerStyle={{ paddingBottom: 80 + bottom + 16 }}
