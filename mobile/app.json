@@ -1,4 +1,5 @@
 {
+  "scheme": "foodiary",
   "expo": {
     "name": "foodiary",
     "slug": "foodiary",
@@ -27,7 +28,8 @@
     },
     "plugins": [
       "expo-font",
-      "expo-audio"
+      "expo-audio",
+      "expo-router"
     ]
   }
 }
