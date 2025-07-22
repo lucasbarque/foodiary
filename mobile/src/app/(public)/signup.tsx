@@ -1,9 +1,64 @@
 import { Text, View } from "react-native";
+import { AuthLayout } from "../../components/AuthLayout";
+import { useState } from "react";
+import { GoalStep } from "../../components/SignUpSteps/GoalStep";
+import { GenderStep } from "../../components/SignUpSteps/GenderStep";
+import { Button } from "../../components/Button";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react-native";
+import { colors } from "../../styles/colors";
+import { router } from "expo-router";
 
 export default function SignUp() {
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+  const steps = [
+    {
+      icon: "🎯",
+      title: "Qual é seu objetivo?",
+      subtitle: "O que você pretende alcançar com a dieta?",
+      Component: GoalStep,
+    },
+    {
+      icon: "👥",
+      title: "Qual é seu gênero?",
+      subtitle: "Seu gênero influencia no tipo da dieta.",
+      Component: GenderStep,
+    },
+  ];
+
+  function handlePreviousStep() {
+    if (currentStepIndex === 0) {
+      router.back();
+      return;
+    }
+    setCurrentStepIndex((prevState) => prevState - 1);
+  }
+
+  function handleNextStep() {
+    setCurrentStepIndex((prevState) => prevState + 1);
+  }
+
+  const currentStep = steps[currentStepIndex];
+
   return (
-    <View>
-      <Text>Cadastrar.</Text>
-    </View>
+    <AuthLayout
+      icon={currentStep.icon}
+      title={currentStep.title}
+      subtitle={currentStep.subtitle}
+    >
+      <View className="justify-between flex-1">
+        <currentStep.Component />
+
+        <View className="flex-row justify-between">
+          <Button size="icon" color="gray" onPress={handlePreviousStep}>
+            <ArrowLeftIcon size={20} color={colors.black[700]} />
+          </Button>
+
+          <Button size="icon" onPress={handleNextStep}>
+            <ArrowRightIcon size={20} color={colors.black[700]} />
+          </Button>
+        </View>
+      </View>
+    </AuthLayout>
   );
 }
