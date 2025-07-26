@@ -18,6 +18,7 @@ export class ProcessMeal {
     });
 
     if (!meal) {
+      console.log("Meal not found");
       throw new Error("Meal not found.");
     }
 
@@ -39,10 +40,14 @@ export class ProcessMeal {
         const audioFileBuffer = await this.downloadAudioFile(meal.inputFileKey);
         const transcription = await transcribeAudio(audioFileBuffer);
 
+        console.log({ transcription });
+
         const mealDetails = await getMealDetailsFromText({
           createdAt: new Date(),
           text: transcription,
         });
+
+        console.log({ mealDetails });
 
         icon = mealDetails.icon;
         name = mealDetails.name;
@@ -90,6 +95,7 @@ export class ProcessMeal {
     const { Body } = await s3Client.send(command);
 
     if (!Body || !(Body instanceof Readable)) {
+      console.log("Cannot load the audio file.");
       throw new Error("Cannot load the audio file.");
     }
 
