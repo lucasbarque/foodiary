@@ -1,12 +1,12 @@
-import { z } from "zod";
+import { hash } from "bcryptjs";
+import { eq } from "drizzle-orm";
+import z from "zod";
+import { db } from "../db";
+import { usersTable } from "../db/schema";
+import { calculateGoals } from "../lib/calculateGoals";
+import { signAccessTokenFor } from "../lib/jwt";
 import { HttpRequest, HttpResponse } from "../types/Http";
 import { badRequest, conflict, created } from "../utils/http";
-import { db } from "../db";
-import { eq } from "drizzle-orm";
-import { usersTable } from "../db/schema";
-import { hash } from "bcryptjs";
-import { signAccessTokenFor } from "../lib/jwt";
-import { calculateGoals } from "../lib/calculateGoals";
 
 const schema = z.object({
   goal: z.enum(["lose", "maintain", "gain"]),
@@ -31,12 +31,14 @@ export class SignUpController {
     }
 
     const userAlreadyExists = await db.query.usersTable.findFirst({
-      columns: { email: true },
+      columns: {
+        email: true,
+      },
       where: eq(usersTable.email, data.account.email),
     });
 
     if (userAlreadyExists) {
-      return conflict({ error: "This email is already in use" });
+      return conflict({ error: "This email is already in use." });
     }
 
     const { account, ...rest } = data;
