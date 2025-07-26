@@ -2,8 +2,8 @@ import { CameraIcon, MicIcon } from "lucide-react-native";
 import { useState } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button } from "./Button";
 import { AudioModal } from "./AudioModal";
+import { Button } from "./Button";
 import { CameraModal } from "./CameraModal";
 
 export function CreateMealBottomBar() {
@@ -39,6 +39,7 @@ export function CreateMealBottomBar() {
         open={isAudioModalOpen}
         onClose={() => setIsAudioModalOpen(false)}
       />
+
       <CameraModal
         open={isPictureModalOpen}
         onClose={() => setIsPictureModalOpen(false)}
