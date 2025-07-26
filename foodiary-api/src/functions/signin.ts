@@ -1,4 +1,5 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
+
 import { SignInController } from "../controllers/SignInController";
 import { parseEvent } from "../utils/parseEvent";
 import { parseResponse } from "../utils/parseResponse";
