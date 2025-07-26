@@ -6,6 +6,9 @@ import { Image, Modal, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../styles/colors";
 import { Button } from "./Button";
+import { useMutation } from "@tanstack/react-query";
+import { httpClient } from "../services/httpClient";
+import { useCreateMeal } from "../hooks/useCreateMeal";
 
 interface ICameraModalProps {
   open: boolean;
@@ -17,6 +20,8 @@ export function CameraModal({ onClose, open }: ICameraModalProps) {
   const [permission, requestPermission] = useCameraPermissions();
 
   const cameraRef = useRef<CameraView>(null);
+
+  const { createMeal, isLoading } = useCreateMeal("image/jpeg");
 
   function handleCloseModal() {
     onClose();
@@ -105,7 +110,11 @@ export function CameraModal({ onClose, open }: ICameraModalProps) {
                   <Button size="icon" color="dark" onPress={handleDeletePhoto}>
                     <Trash2Icon size={20} color={colors.gray[500]} />
                   </Button>
-                  <Button size="icon">
+                  <Button
+                    size="icon"
+                    loading={isLoading}
+                    onPress={() => createMeal(photoUri)}
+                  >
                     <CheckIcon size={20} color={colors.black[700]} />
                   </Button>
                 </View>
