@@ -22,6 +22,10 @@ import {
   useAudioRecorder,
   useAudioRecorderState,
 } from "expo-audio";
+import { useMutation } from "@tanstack/react-query";
+import { httpClient } from "../services/httpClient";
+
+import * as FileSystem from "expo-file-system";
 
 interface IAudioModalProps {
   open: boolean;
@@ -54,6 +58,22 @@ export function AudioModal({ onClose, open }: IAudioModalProps) {
     setAudioUri(null);
     onClose();
   }
+
+  const { mutateAsync: createMeal } = useMutation({
+    mutationFn: async (uri: string) => {
+      const { data } = await httpClient.post<{
+        uploadURL: string;
+        mealId: string;
+      }>("/meals", {
+        fileType: "audio/m4a",
+      });
+
+      await FileSystem.uploadAsync(data.uploadURL, uri, {
+        httpMethod: "PUT",
+        uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
+      });
+    },
+  });
 
   useEffect(() => {
     (async () => {
@@ -165,7 +185,7 @@ export function AudioModal({ onClose, open }: IAudioModalProps) {
                   </Button>
                 )}
 
-                <Button size="icon">
+                <Button size="icon" onPress={() => createMeal(audioUri)}>
                   <CheckIcon size={20} color={colors.black[700]} />
                 </Button>
               </View>
