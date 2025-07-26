@@ -100,7 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
   }, []);
 
-  const { data: user } = useQuery({
+  const { data: user, isFetching } = useQuery({
     enabled: !!token,
     queryKey: ["user"],
     queryFn: async () => {
@@ -114,8 +114,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        isLoggedIn: !!token,
-        isLoading: isLoadingToken,
+        isLoggedIn: !!user,
+        isLoading: isLoadingToken || isFetching,
         signIn,
         signUp,
         signOut,
