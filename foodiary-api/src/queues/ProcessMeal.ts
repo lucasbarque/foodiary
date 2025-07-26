@@ -62,7 +62,7 @@ export class ProcessMeal {
               calories: 100,
               proteins: 200,
               carbohydrates: 300,
-              fasts: 400,
+              fats: 400,
             },
           ],
         })
