@@ -49,7 +49,7 @@ function RootLayout() {
     if (isFontLoaded && isUserLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, error]);
+  }, [loaded, error, isLoading]);
 
   if (!loaded && !error) {
     return null;
