@@ -1,9 +1,9 @@
-import { ActivityIndicator, Text, View } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
-import { Button } from "../../../components/Button";
 import { useQuery } from "@tanstack/react-query";
-import { httpClient } from "../../../services/httpClient";
+import { router, useLocalSearchParams } from "expo-router";
+import { ActivityIndicator, Text, View } from "react-native";
+import { Button } from "../../../components/Button";
 import { Logo } from "../../../components/Logo";
+import { httpClient } from "../../../services/httpClient";
 
 type Meal = {
   id: string;
@@ -28,12 +28,14 @@ export default function MealDetails() {
     queryKey: ["meal", mealId],
     staleTime: Infinity,
     queryFn: async () => {
-      const { data } = await httpClient.get<{ meal: Meal }>(`meals/${mealId}`);
+      const { data } = await httpClient.get<{ meal: Meal }>(`/meals/${mealId}`);
 
       return data.meal;
     },
     refetchInterval: (query) => {
-      if (query.state.data?.status === "success") return false;
+      if (query.state.data?.status === "success") {
+        return false;
+      }
 
       return 2_000;
     },
@@ -51,6 +53,7 @@ export default function MealDetails() {
   return (
     <View className="flex-1 items-center justify-center">
       <Button onPress={router.back}>Voltar</Button>
+
       <Text>{JSON.stringify(meal, null, 2)}</Text>
     </View>
   );
