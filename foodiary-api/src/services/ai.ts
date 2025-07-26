@@ -22,12 +22,13 @@ export async function getMealDetailsFromText({
   createdAt,
   text,
 }: GetMealDetailsFromTextParams) {
-  const response = await client.chat.completions.create({
-    model: "gpt-4.1-mini",
-    messages: [
-      {
-        role: "system",
-        content: `
+  try {
+    const response = await client.chat.completions.create({
+      model: "gpt-4.1-mini",
+      messages: [
+        {
+          role: "system",
+          content: `
           Você é um nutricionista e está atendendo um de seus pacientes. Você deve responder para ele seguindo as instruções a baixo.
 
           Seu papel é:
@@ -66,24 +67,29 @@ export async function getMealDetailsFromText({
             ]
           }
         `,
-      },
-      {
-        role: "user",
-        content: `
+        },
+        {
+          role: "user",
+          content: `
           Data: ${createdAt}
           Refeição: ${text}
         `,
-      },
-    ],
-  });
+        },
+      ],
+    });
 
-  const json = response.choices[0].message.content;
+    const json = response.choices[0].message.content;
 
-  if (!json) {
-    throw new Error("Failed to process meal.");
+    if (!json) {
+      console.log("Failed to process meal text.");
+      throw new Error("Failed to process meal.");
+    }
+
+    return JSON.parse(json);
+  } catch (error) {
+    console.log("Error on getMealDetailsFromText");
+    console.log({ error });
   }
-
-  return JSON.parse(json);
 }
 
 type GetMealDetailsFromImageParams = {
@@ -160,6 +166,7 @@ export async function getMealDetailsFromImage({
   const json = response.choices[0].message.content;
 
   if (!json) {
+    console.log("Failed to process meal.");
     throw new Error("Failed to process meal.");
   }
 
