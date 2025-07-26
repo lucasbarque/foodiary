@@ -1,20 +1,16 @@
-import {
-  Alert,
-  Keyboard,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import { AuthLayout } from "../../components/AuthLayout";
-import { Input } from "../../components/Input";
-import { Button } from "../../components/Button";
-import { ArrowLeftIcon } from "lucide-react-native";
-import { router } from "expo-router";
-import { colors } from "../../styles/colors";
-import z from "zod";
-import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { router } from "expo-router";
+import { ArrowLeftIcon } from "lucide-react-native";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Alert, Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import z from "zod";
+
+import { AuthLayout } from "../../components/AuthLayout";
+import { Button } from "../../components/Button";
+import { Input } from "../../components/Input";
 import { useAuth } from "../../hooks/useAuth";
+import { colors } from "../../styles/colors";
 
 const schema = z.object({
   email: z.email("Informe um e-mail válido"),
@@ -32,10 +28,11 @@ export default function SignIn() {
 
   const { signIn } = useAuth();
 
-  const handleSubmit = form.handleSubmit(async (data) => {
+  const handleSubmit = form.handleSubmit(async (formData) => {
     try {
-      await signIn(data);
-    } catch {
+      await signIn(formData);
+    } catch (error) {
+      console.log(error);
       Alert.alert("Credenciais inválidas!");
     }
   });
@@ -47,7 +44,7 @@ export default function SignIn() {
       subtitle="Acesse sua conta para continuar"
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View className="flex-1 justify-between">
+        <View className="justify-between flex-1">
           <View className="gap-6">
             <Controller
               control={form.control}
