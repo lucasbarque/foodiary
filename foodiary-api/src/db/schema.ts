@@ -19,7 +19,7 @@ export const usersTable = pgTable("users", {
   birthDate: date("birth_date").notNull(),
   height: integer().notNull(),
   weight: integer().notNull(),
-  activityLevel: integer().notNull(),
+  activityLevel: integer("activity_level").notNull(),
   // Goals
   calories: integer().notNull(),
   proteins: integer().notNull(),
@@ -33,7 +33,8 @@ export const mealStatus = pgEnum("meal_status", [
   "success",
   "failed",
 ]);
-export const mealInputType = pgEnum("input_type", ["audio", "picture"]);
+
+export const mealInputType = pgEnum("meal_input_type", ["audio", "picture"]);
 
 export const mealsTable = pgTable("meals", {
   id: uuid().primaryKey().defaultRandom(),
