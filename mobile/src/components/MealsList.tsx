@@ -6,7 +6,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { httpClient } from "../services/httpClient";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useFocusEffect } from "expo-router";
 
 interface IMealsListHeaderProps {
   currentDate: Date;
@@ -116,7 +117,7 @@ export function MealsList() {
     return `${year}-${month}-${day}`;
   }, [currentDate]);
 
-  const { data: meals } = useQuery({
+  const { data: meals, refetch } = useQuery({
     queryKey: ["meals", dateParam],
     staleTime: 15_000,
     queryFn: async () => {
@@ -129,6 +130,12 @@ export function MealsList() {
       return data.meals;
     },
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
+  );
 
   function handlePreviousDate() {
     setCurrentDate((prevState) => {
