@@ -10,57 +10,9 @@ import { useMemo, useState } from "react";
 
 interface IMealsListHeaderProps {
   currentDate: Date;
+  meals: Meal[];
   onPreviousDate: () => void;
   onNextDate: () => void;
-}
-
-function MealsListHeader({
-  currentDate,
-  onNextDate,
-  onPreviousDate,
-}: IMealsListHeaderProps) {
-  const { user } = useAuth();
-
-  if (!user) return;
-
-  return (
-    <View>
-      <DateSwitcher
-        currentDate={currentDate}
-        onPreviousDate={onPreviousDate}
-        onNextDate={onNextDate}
-      />
-      <View className="mt-2">
-        <DailyStats
-          calories={{
-            current: 0,
-            goal: user.calories,
-          }}
-          proteins={{
-            current: 0,
-            goal: user.proteins,
-          }}
-          carbohydrates={{
-            current: 0,
-            goal: user.carbohydrates,
-          }}
-          fats={{
-            current: 0,
-            goal: user.fats,
-          }}
-        />
-      </View>
-      <View className="h-px bg-gray-200 mt-7" />
-
-      <Text className="text-black-700 text-base m-5 font-sans-medium tracking-[1.28px]">
-        REFEIÇÕES
-      </Text>
-    </View>
-  );
-}
-
-function Separator() {
-  return <View className="h-8" />;
 }
 
 type Meal = {
@@ -77,6 +29,79 @@ type Meal = {
   }[];
   createdAt: Date;
 };
+
+function MealsListHeader({
+  currentDate,
+  onNextDate,
+  onPreviousDate,
+  meals,
+}: IMealsListHeaderProps) {
+  const { user } = useAuth();
+
+  const totals = useMemo(() => {
+    let calories = 0;
+    let proteins = 0;
+    let carbohydrates = 0;
+    let fats = 0;
+
+    for (const meal of meals) {
+      for (const food of meal.foods) {
+        calories += food.calories;
+        proteins += food.proteins;
+        carbohydrates += food.carbohydrates;
+        fats += food.fats;
+      }
+    }
+
+    return {
+      calories,
+      proteins,
+      carbohydrates,
+      fats,
+    };
+  }, [meals]);
+
+  if (!user) return;
+
+  return (
+    <View>
+      <DateSwitcher
+        currentDate={currentDate}
+        onPreviousDate={onPreviousDate}
+        onNextDate={onNextDate}
+      />
+      <View className="mt-2">
+        <DailyStats
+          calories={{
+            current: totals.calories,
+            goal: user.calories,
+          }}
+          proteins={{
+            current: totals.proteins,
+            goal: user.proteins,
+          }}
+          carbohydrates={{
+            current: totals.carbohydrates,
+            goal: user.carbohydrates,
+          }}
+          fats={{
+            current: totals.fats,
+            goal: user.fats,
+          }}
+        />
+      </View>
+      <View className="h-px bg-gray-200 mt-7" />
+
+      <Text className="text-black-700 text-base m-5 font-sans-medium tracking-[1.28px]">
+        REFEIÇÕES
+      </Text>
+    </View>
+  );
+}
+
+function Separator() {
+  return <View className="h-8" />;
+}
 
 export function MealsList() {
   const { bottom } = useSafeAreaInsets();
@@ -126,20 +151,27 @@ export function MealsList() {
     <View>
       <FlatList
         data={meals}
-        contentContainerStyle={{ paddingBottom: 80 + bottom + 16 }}
+        contentContainerStyle={{ paddingBottom: 220 + bottom + 16 }}
         keyExtractor={(meal) => meal.id}
         ListHeaderComponent={
           <MealsListHeader
             currentDate={currentDate}
             onNextDate={handleNextDate}
             onPreviousDate={handlePreviousDate}
+            meals={meals ?? []}
           />
         }
         ListEmptyComponent={<Text>Nenhuma refeição cadastrada...</Text>}
         ItemSeparatorComponent={Separator}
         renderItem={({ item: meal }) => (
           <View className="mx-5">
-            <MealCard id={meal.id} name={meal.name} />
+            <MealCard
+              id={meal.id}
+              name={meal.name}
+              icon={meal.icon}
+              foods={meal.foods}
+              createdAt={new Date(meal.createdAt)}
+            />
           </View>
         )}
       />
