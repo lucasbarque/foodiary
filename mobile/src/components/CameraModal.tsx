@@ -9,6 +9,7 @@ import { Button } from "./Button";
 import { useMutation } from "@tanstack/react-query";
 import { httpClient } from "../services/httpClient";
 import { useCreateMeal } from "../hooks/useCreateMeal";
+import { router } from "expo-router";
 
 interface ICameraModalProps {
   open: boolean;
@@ -21,7 +22,13 @@ export function CameraModal({ onClose, open }: ICameraModalProps) {
 
   const cameraRef = useRef<CameraView>(null);
 
-  const { createMeal, isLoading } = useCreateMeal("image/jpeg");
+  const { createMeal, isLoading } = useCreateMeal({
+    fileType: "image/jpeg",
+    onSuccess: (mealId) => {
+      router.push(`/meals/${mealId}`);
+      handleCloseModal();
+    },
+  });
 
   function handleCloseModal() {
     onClose();
