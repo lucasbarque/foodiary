@@ -26,10 +26,9 @@ export default function MealDetails() {
 
   const { data: meal, isFetching } = useQuery({
     queryKey: ["meal", mealId],
+    staleTime: Infinity,
     queryFn: async () => {
       const { data } = await httpClient.get<{ meal: Meal }>(`meals/${mealId}`);
-
-      console.log(JSON.stringify(data, null, 2));
 
       return data.meal;
     },
