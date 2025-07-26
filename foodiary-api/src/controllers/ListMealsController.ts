@@ -23,8 +23,6 @@ export class ListMealsController {
     const endDate = new Date(data.date);
     endDate.setUTCHours(23, 59, 59, 59);
 
-    console.log({ endDate, data, userId });
-
     const meals = await db.query.mealsTable.findMany({
       columns: {
         id: true,
