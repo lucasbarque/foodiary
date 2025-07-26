@@ -5,7 +5,7 @@ import { colors } from "../styles/colors";
 import { useAuth } from "../hooks/useAuth";
 
 export function HomeHeader() {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   return (
     <View className="bg-lime-400 h-[130px]">
@@ -15,7 +15,7 @@ export function HomeHeader() {
             Olá, 👋
           </Text>
           <Text className="text-black-700 text-base font-sans-semibold">
-            Lucas
+            {user?.name}
           </Text>
         </View>
 
