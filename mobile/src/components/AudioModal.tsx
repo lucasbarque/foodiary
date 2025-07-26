@@ -27,6 +27,7 @@ import { httpClient } from "../services/httpClient";
 
 import * as FileSystem from "expo-file-system";
 import { useCreateMeal } from "../hooks/useCreateMeal";
+import { router } from "expo-router";
 
 interface IAudioModalProps {
   open: boolean;
@@ -60,7 +61,13 @@ export function AudioModal({ onClose, open }: IAudioModalProps) {
     onClose();
   }
 
-  const { createMeal, isLoading } = useCreateMeal("audio/m4a");
+  const { createMeal, isLoading } = useCreateMeal({
+    fileType: "audio/m4a",
+    onSuccess: (mealId) => {
+      router.push(`/meals/${mealId}`);
+      handleCloseModal();
+    },
+  });
 
   useEffect(() => {
     (async () => {
