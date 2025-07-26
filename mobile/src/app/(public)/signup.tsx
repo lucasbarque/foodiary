@@ -1,4 +1,10 @@
-import { Text, View } from "react-native";
+import {
+  Alert,
+  Keyboard,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { AuthLayout } from "../../components/AuthLayout";
 import { useState } from "react";
 import { GoalStep } from "../../components/SignUpSteps/GoalStep";
@@ -15,6 +21,7 @@ import { HeightStep } from "../../components/SignUpSteps/HeightStep";
 import { WeightStep } from "../../components/SignUpSteps/WeightStep";
 import { ActivityLevelStep } from "../../components/SignUpSteps/ActivityLevelStep";
 import { AccountStep } from "../../components/SignUpSteps/AccountStep";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function SignUp() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -80,6 +87,30 @@ export default function SignUp() {
     setCurrentStepIndex((prevState) => prevState + 1);
   }
 
+  const { signUp } = useAuth();
+
+  const handleSubmit = form.handleSubmit(async (formData) => {
+    try {
+      const [day, month, year] = formData.birthDate.split("/");
+
+      await signUp({
+        height: Number(formData.height),
+        weight: Number(formData.weight),
+        activityLevel: Number(formData.activityLevel),
+        gender: formData.gender,
+        goal: formData.goal,
+        birthDate: `${year}-${month}-${day}`,
+        account: {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        },
+      });
+    } catch {
+      Alert.alert("Erro ao criar a conta. Tente novamente.");
+    }
+  });
+
   const currentStep = steps[currentStepIndex];
   const isLastStep = currentStepIndex === steps.length - 1;
 
@@ -89,31 +120,33 @@ export default function SignUp() {
       title={currentStep.title}
       subtitle={currentStep.subtitle}
     >
-      <View className="justify-between flex-1">
-        <FormProvider {...form}>
-          <currentStep.Component />
-        </FormProvider>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View className="justify-between flex-1">
+          <FormProvider {...form}>
+            <currentStep.Component />
+          </FormProvider>
 
-        <View className="flex-row justify-between gap-4">
-          <Button size="icon" color="gray" onPress={handlePreviousStep}>
-            <ArrowLeftIcon size={20} color={colors.black[700]} />
-          </Button>
+          <View className="flex-row justify-between gap-4">
+            <Button size="icon" color="gray" onPress={handlePreviousStep}>
+              <ArrowLeftIcon size={20} color={colors.black[700]} />
+            </Button>
 
-          {isLastStep ? (
-            <Button
-              className="flex-1"
-              onPress={() => {}}
-              loading={form.formState.isSubmitting}
-            >
-              Criar conta
-            </Button>
-          ) : (
-            <Button size="icon" onPress={handleNextStep}>
-              <ArrowRightIcon size={20} color={colors.black[700]} />
-            </Button>
-          )}
+            {isLastStep ? (
+              <Button
+                className="flex-1"
+                onPress={handleSubmit}
+                loading={form.formState.isSubmitting}
+              >
+                Criar conta
+              </Button>
+            ) : (
+              <Button size="icon" onPress={handleNextStep}>
+                <ArrowRightIcon size={20} color={colors.black[700]} />
+              </Button>
+            )}
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </AuthLayout>
   );
 }
