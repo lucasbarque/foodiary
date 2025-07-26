@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createContext,
   ReactNode,
@@ -9,6 +9,16 @@ import {
 import { httpClient } from "../services/httpClient";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  calories: number;
+  proteins: number;
+  carbohydrates: number;
+  fats: number;
+};
 
 type SignInParams = {
   email: string;
@@ -32,6 +42,7 @@ type SignUpParams = {
 export async function signIn({ email, password }: SignInParams) {}
 
 interface IAuthContextValue {
+  user: User | null;
   isLoggedIn: boolean;
   isLoading: boolean;
   signIn(params: SignInParams): Promise<void>;
@@ -50,8 +61,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function run() {
       if (!token) {
+        httpClient.defaults.headers.common["Authorization"] = null;
         return;
       }
+      httpClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       await AsyncStorage.setItem(TOKEN_STORAGE_KEY, token);
     }
     run();
@@ -87,6 +100,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
   }, []);
 
+  const { data: user } = useQuery({
+    enabled: !!token,
+    queryKey: ["user"],
+    queryFn: async () => {
+      const { data } = await httpClient.get<{ user: User }>("/me");
+      const { user } = data;
+
+      return user;
+    },
+  });
+
   return (
     <AuthContext.Provider
       value={{
@@ -95,6 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signIn,
         signUp,
         signOut,
+        user: user ?? null,
       }}
     >
       {children}
