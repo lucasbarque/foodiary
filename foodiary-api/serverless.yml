@@ -82,6 +82,7 @@ functions:
           forceDeploy: true
   processMeal:
     handler: src/functions/processMeal.handler
+    timeout: 900
     events:
       - sqs:
           arn: !GetAtt MealsQueue.Arn
@@ -97,7 +98,7 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: meals-queue
-        VisibilityTimeout: 60
+        VisibilityTimeout: 910
         RedrivePolicy:
           maxReceiveCount: 1
           deadLetterTargetArn: !GetAtt MealsDLQ.Arn
