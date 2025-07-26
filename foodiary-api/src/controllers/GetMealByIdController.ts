@@ -1,9 +1,9 @@
-import { and, eq, gte, lte } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
+import z from "zod";
 import { db } from "../db";
 import { mealsTable } from "../db/schema";
 import { HttpResponse, ProtectedHttpRequest } from "../types/Http";
-import { badRequest, created, ok } from "../utils/http";
-import z from "zod";
+import { badRequest, ok } from "../utils/http";
 
 const schema = z.object({
   mealId: z.uuid(),
@@ -29,7 +29,7 @@ export class GetMealByIdController {
         name: true,
         status: true,
       },
-      where: and(eq(mealsTable.userId, userId), eq(mealsTable.id, data.mealId)),
+      where: and(eq(mealsTable.id, data.mealId), eq(mealsTable.userId, userId)),
     });
 
     return ok({ meal });
