@@ -1,7 +1,8 @@
-import { ImageBackground, SafeAreaView, Text, View } from "react-native";
-import { Logo } from "../../components/Logo";
-import { Button } from "../../components/Button";
 import { Link } from "expo-router";
+import { ImageBackground, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Button } from "../../components/Button";
+import { Logo } from "../../components/Logo";
 
 export default function SignIn() {
   return (
@@ -21,16 +22,16 @@ export default function SignIn() {
             </Text>
 
             <View className="p-5 w-full mt-6">
-              <Link asChild href="/signup">
+              <Link href="/signup" asChild>
                 <Button className="w-full">Criar conta</Button>
               </Link>
 
               <View className="mt-[30px] flex-row items-center gap-2 justify-center">
-                <Text className="font-sans-regular text-white text-base">
-                  Já tem uma conta?
+                <Text className="text-white font-sans-regular text-base">
+                  Já tem conta?
                 </Text>
-                <Link asChild href="/signin">
-                  <Text className="text-lime-500 font-sans-regular text-base">
+                <Link href="/signin">
+                  <Text className="text-lime-500 font-sans-medium text-base">
                     Acesse agora!
                   </Text>
                 </Link>
