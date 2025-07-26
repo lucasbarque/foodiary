@@ -3,6 +3,7 @@ import { S3Event } from "aws-lambda";
 import { sqsClient } from "../clients/sqsClient";
 
 export async function handler(event: S3Event) {
+  console.log(event);
   await Promise.all(
     event.Records.map(async (record) => {
       const command = new SendMessageCommand({
