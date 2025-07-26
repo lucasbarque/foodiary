@@ -1,8 +1,9 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
-import { parseResponse } from "../utils/parseResponse";
-import { parseProtectedEvent } from "../utils/parseProtectedEvent";
-import { unauthorized } from "../utils/http";
+
 import { ListMealsController } from "../controllers/ListMealsController";
+import { unauthorized } from "../utils/http";
+import { parseProtectedEvent } from "../utils/parseProtectedEvent";
+import { parseResponse } from "../utils/parseResponse";
 
 export async function handler(event: APIGatewayProxyEventV2) {
   try {
@@ -10,6 +11,6 @@ export async function handler(event: APIGatewayProxyEventV2) {
     const response = await ListMealsController.handle(request);
     return parseResponse(response);
   } catch {
-    return parseResponse(unauthorized({ error: "Invalid access token" }));
+    return parseResponse(unauthorized({ error: "Invalid access token." }));
   }
 }
