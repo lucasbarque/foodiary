@@ -9,15 +9,16 @@ export function GoalStep() {
     <Controller
       control={form.control}
       name="goal"
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <OptionsSelector
           value={field.value}
           onChange={field.onChange}
           options={[
             { icon: "🥦", title: "Perder peso", value: "lose" },
-            { icon: "🍍", title: "Manter peso", value: "mantain" },
+            { icon: "🍍", title: "Manter peso", value: "maintain" },
             { icon: "🥩", title: "Ganhar peso", value: "gain" },
           ]}
+          error={fieldState.error?.message}
         />
       )}
     ></Controller>
