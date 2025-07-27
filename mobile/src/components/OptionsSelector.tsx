@@ -10,12 +10,14 @@ interface IOptionSelectorProps {
     title: string;
     description?: string;
   }[];
+  error?: string;
 }
 
 export function OptionsSelector({
   options,
   onChange,
   value,
+  error,
 }: IOptionSelectorProps) {
   return (
     <View className="gap-4 w-full">
@@ -50,6 +52,10 @@ export function OptionsSelector({
           </View>
         </TouchableOpacity>
       ))}
+
+      {error && (
+        <Text className="text-red-500 text-sm font-sans-regular">{error}</Text>
+      )}
     </View>
   );
 }
