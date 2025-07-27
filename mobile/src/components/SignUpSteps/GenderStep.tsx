@@ -9,7 +9,7 @@ export function GenderStep() {
     <Controller
       control={form.control}
       name="gender"
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <OptionsSelector
           value={field.value}
           onChange={field.onChange}
@@ -25,6 +25,7 @@ export function GenderStep() {
               value: "female",
             },
           ]}
+          error={fieldState.error?.message}
         />
       )}
     />
