@@ -23,6 +23,7 @@ export default function SignUp() {
 
   const form = useForm({
     resolver: zodResolver(signUpSchema),
+    mode: "onChange",
   });
 
   const steps = [
@@ -79,7 +80,27 @@ export default function SignUp() {
     setCurrentStepIndex((prevState) => prevState - 1);
   }
 
-  function handleNextStep() {
+  async function handleNextStep() {
+    // Definir os campos que precisam ser validados para cada step
+    const stepFields = [
+      ["goal"] as const, // Step 0: GoalStep
+      ["gender"] as const, // Step 1: GenderStep
+      ["birthDate"] as const, // Step 2: BirthDateStep
+      ["height"] as const, // Step 3: HeightStep
+      ["weight"] as const, // Step 4: WeightStep
+      ["activityLevel"] as const, // Step 5: ActivityLevelStep
+      ["name", "email", "password"] as const, // Step 6: AccountStep
+    ] as const;
+
+    const fieldsToValidate = stepFields[currentStepIndex];
+
+    // Validar apenas os campos do step atual
+    const isStepValid = await form.trigger(fieldsToValidate);
+
+    if (!isStepValid) {
+      return; // Não avança se houver erros de validação
+    }
+
     setCurrentStepIndex((prevState) => prevState + 1);
   }
 
@@ -134,6 +155,9 @@ export default function SignUp() {
               <Button
                 className="flex-1"
                 onPress={handleSubmit}
+                disabled={
+                  form.formState.isSubmitting || !form.formState.isValid
+                }
                 loading={form.formState.isSubmitting}
               >
                 Criar conta
