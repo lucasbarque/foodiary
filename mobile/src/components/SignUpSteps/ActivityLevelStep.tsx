@@ -9,7 +9,7 @@ export function ActivityLevelStep() {
     <Controller
       control={form.control}
       name="activityLevel"
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <OptionsSelector
           value={field.value}
           onChange={field.onChange}
@@ -23,19 +23,19 @@ export function ActivityLevelStep() {
             {
               icon: "🚶",
               title: "Leve",
-              description: "Exercício leve 1-3 dias por semana",
+              description: "Exercício 1-3 dias por semana",
               value: "2",
             },
             {
               icon: "🏃",
               title: "Moderado",
-              description: "Exercício moderado 3-5 dias por semana",
+              description: "Exercício 3-5 dias por semana",
               value: "3",
             },
             {
               icon: "🏋️",
               title: "Pesado",
-              description: "Exercício pesado 6-7 dias por semana",
+              description: "Exercício 6-7 dias por semana",
               value: "4",
             },
             {
@@ -45,6 +45,7 @@ export function ActivityLevelStep() {
               value: "5",
             },
           ]}
+          error={fieldState.error?.message}
         />
       )}
     />
