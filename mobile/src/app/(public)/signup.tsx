@@ -110,6 +110,8 @@ export default function SignUp() {
     try {
       const [day, month, year] = formData.birthDate.split("/");
 
+      console.log({ formData: JSON.stringify(formData, null, 2) });
+
       await signUp({
         height: Number(formData.height),
         weight: Number(formData.weight),
