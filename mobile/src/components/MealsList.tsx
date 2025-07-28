@@ -6,8 +6,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { httpClient } from "../services/httpClient";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useFocusEffect } from "expo-router";
+import LottieView from "lottie-react-native";
 
 interface IMealsListHeaderProps {
   currentDate: Date;
@@ -108,6 +109,7 @@ export function MealsList() {
   const { bottom } = useSafeAreaInsets();
 
   const [currentDate, setCurrentDate] = useState(new Date());
+  const animation = useRef<LottieView>(null);
 
   const dateParam = useMemo(() => {
     const year = currentDate.getFullYear();
@@ -168,7 +170,28 @@ export function MealsList() {
             meals={meals ?? []}
           />
         }
-        ListEmptyComponent={<Text>Nenhuma refeição cadastrada...</Text>}
+        ListEmptyComponent={
+          <View className="px-5 gap-2 mt-4 text-center items-center">
+            <LottieView
+              autoPlay
+              ref={animation}
+              style={{
+                width: 200,
+                height: 200,
+                marginBottom: -50,
+                marginTop: -70,
+              }}
+              source={require("../assets/animations/fast-food.json")}
+            />
+            <Text className="text-orange-500 text-xl font-sans-bold">
+              Sem refeições cadastradas
+            </Text>
+            <Text className="text-center px-6 text-slate-500 text-base font-sans-regular">
+              Começe cadastrando agora mesmo e tenha um controle melhor da sua
+              dieta.
+            </Text>
+          </View>
+        }
         ItemSeparatorComponent={Separator}
         renderItem={({ item: meal }) => (
           <View className="mx-5">
