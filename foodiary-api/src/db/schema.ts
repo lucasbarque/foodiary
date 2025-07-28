@@ -1,5 +1,6 @@
 import {
   date,
+  doublePrecision,
   integer,
   json,
   pgEnum,
@@ -18,7 +19,7 @@ export const usersTable = pgTable("users", {
   gender: varchar({ length: 6 }).notNull(),
   birthDate: date("birth_date").notNull(),
   height: integer().notNull(),
-  weight: integer().notNull(),
+  weight: doublePrecision().notNull(),
   activityLevel: integer("activity_level").notNull(),
   // Goals
   calories: integer().notNull(),
