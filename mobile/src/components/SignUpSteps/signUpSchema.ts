@@ -98,7 +98,11 @@ export const signUpSchema = z.object({
       const normalizedWeight = weight.replace(",", ".");
       const numericWeight = parseFloat(normalizedWeight);
       return !isNaN(numericWeight) && numericWeight >= 25;
-    }, "O peso deve ser de pelo menos 25kg"),
+    }, "O peso deve ser de pelo menos 25kg")
+    .transform((weight) => {
+      // Transforma vírgula em ponto para envio à API
+      return weight.replace(",", ".");
+    }),
   activityLevel: z.string("Para continuar, selecione uma das opções."),
   name: z
     .string("Nome é obrigatório")
